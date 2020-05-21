@@ -6,6 +6,7 @@ import 'package:esencia_de_atencion_01/servicios/prefs_usuario.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:provider/provider.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class Argumentos {
   final Modulo modulo;
@@ -13,78 +14,56 @@ class Argumentos {
   Argumentos(this.modulo, [this.posic]);
 }
 
-class ModuloPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final Modulo modulo = ModalRoute.of(context).settings.arguments;
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          TituloModulo(modulo),
-          SliverList(
-            delegate: SliverChildListDelegate(
-              modulo.temas.map((tema) => CuerpoModulo(tema)).toList(),
-              // CuerpoModulo(modulo),
-            )
-          )
-        ],
-      )
-    );
-  }
-}
 
 class ModuloPage2 extends StatelessWidget {
   static int pagInic;
   final Argumentos argumentos;
   ModuloPage2(this.argumentos);
-  final _controller = new PageController(initialPage: pagInic??0);
-  final _controller2 = new PageController(initialPage: pagInic??0);
-  // final _controller = PageController();
   static const _kDuration = const Duration(milliseconds: 300);
   static const _kCurve = Curves.ease;
   final _kArrowColor = Colors.black.withOpacity(0.8);
+  PageController _controller;
   @override
   Widget build(BuildContext context) {
-    //final prov = Provider.of<AudioService>(context, listen: true);
     final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
-    //final Audicion audicion = ModalRoute.of(context).settings.arguments;
-    //final Argumentos arg =  ModalRoute.of(context).settings.arguments;
-    // final Modulo modulo = arg.modulo;
+    _controller = _controller ?? new PageController(initialPage: pagInic??0);
     final Modulo modulo = argumentos.modulo;
-    //final int posic = argumentos.posic;
     final ancho = MediaQuery.of(context).size.width;
     final alto = MediaQuery.of(context).size.height;
     return Scaffold(
-      //appBar: AppBar(),
       key: _drawerKey,
       drawer: MenuLateral(),
-      // drawer: ExpansionTileSample(),
       body: Stack(
         children: <Widget>[
           PageView.builder(
             itemCount: modulo.temas.length,
             physics: AlwaysScrollableScrollPhysics(),
-            controller: _controller2,
+            controller: _controller,
             itemBuilder: (BuildContext context, int i) {
               return PaginaTema(modulo.temas[i], _drawerKey);
             }
           ),
           Positioned(
-            // top: alto*0.195,
             bottom: 0.0,
             left: 0.0,
             right: 0.0,
             child: Container (
-              // color: Colors.grey[800].withOpacity(0.5),
               padding: EdgeInsets.all(ancho*0.05),
               child: Center (
-                child: DotsIndicator(
-                  controller: _controller2,
-                  itemCount: modulo.temas.length,
-                  onPageSelected: (int page) {
-                    _controller.animateToPage(page, duration: _kDuration, curve: _kCurve);
-                  },
+                child: SmoothPageIndicator(
+                  controller: _controller,  // PageController
+                  count:  modulo.temas.length,
+                  effect:  WormEffect(
+                    activeDotColor: Colors.lightBlue,
+                  ),  // your preferred effect
                 )
+                // child: DotsIndicator(
+                //   controller: _controller,
+                //   itemCount: modulo.temas.length,
+                //   onPageSelected: (int page) {
+                //     _controller.animateToPage(page, duration: _kDuration, curve: _kCurve);
+                //   },
+                // )
               )
             )
           ),
@@ -98,26 +77,6 @@ class ModuloPage2 extends StatelessWidget {
               child: ControlAudio(),
             ),
           )
-          
-          /*
-          Positioned(
-            top: alto*0.00,
-            //top:-100.0,
-            child: Transform.scale(
-              scale: 0.9,
-              origin: Offset(0, -100.0),
-              child: Container(
-                
-                // color: Colors.red,
-                width: ancho,
-                height: alto*0.30,
-                //child: ControlAudio(),
-                //child: Animacion(),
-                child: prov.controles,
-              ),
-            ),
-          ),
-          */
         ],
       ),
     );
@@ -190,17 +149,22 @@ class PaginaTema extends StatelessWidget {
             ),
           ],
         ),
-        SingleChildScrollView(
-          child: Column(
+        Container(
+          height: alto*0.6,
+          child: ListView(
             children: <Widget>[
-              Text(tema.subtitulo,
-                style: TextStyle(
-                  fontSize: ancho*0.04
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: ancho*0.05),
+                child: Text(tema.subtitulo,
+                  style: TextStyle(
+                    fontSize: ancho*0.04
+                  ),
                 ),
               ),
               Divider(),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: ancho*0.05),
+                // child: Text('texto  ñlksad fñlkas dj fñlkasj dfñklasjdfñklas jdfñlkajsdf ñkla jjdfñlka sjdfñlaksd f ñalksd fñaslkdf ñaslkdf ñaslkdf jañslkdfj ñasldkf jñaslkdfj ñaslkdjf ñalskdfj ñaslkdfj ñalksdf jñaslkdf',
                 child: Text(tema.descripcion,
                   textAlign: TextAlign.justify,
                   style: TextStyle(
@@ -212,7 +176,30 @@ class PaginaTema extends StatelessWidget {
               Player(tema.pathAudio, tema.titulo, tema.id),
             ],
           ),
-        )
+        ),
+        // SingleChildScrollView(
+        //   child: Column(
+        //     children: <Widget>[
+        //       Text(tema.subtitulo,
+        //         style: TextStyle(
+        //           fontSize: ancho*0.04
+        //         ),
+        //       ),
+        //       Divider(),
+        //       Padding(
+        //         padding: EdgeInsets.symmetric(horizontal: ancho*0.05),
+        //         child: Text('texto  ñlksad fñlkas dj fñlkasj dfñklasjdfñklas jdfñlkajsdf ñkla jjdfñlka sjdfñlaksd f ñalksd fñaslkdf ñaslkdf ñaslkdf jañslkdfj ñasldkf jñaslkdfj ñaslkdjf ñalskdfj ñaslkdfj ñalksdf jñaslkdf',
+        //           textAlign: TextAlign.justify,
+        //           style: TextStyle(
+        //             fontFamily: 'Times',
+        //             fontSize: ancho*0.046,
+        //           ),
+        //         )
+        //       ),
+        //       Player(tema.pathAudio, tema.titulo, tema.id),
+        //     ],
+        //   ),
+        // )
       ], 
     );
   }
@@ -298,48 +285,6 @@ class TituloModulo extends StatelessWidget {
   }
 }
 
-class CuerpoModulo extends StatelessWidget {
-  /*
-  final Modulo modulo;
-  CuerpoModulo(this.modulo);
-  */
-  final Audicion tema;
-  CuerpoModulo(this.tema);
-  @override
-  Widget build(BuildContext context) {
-    final ancho = MediaQuery.of(context).size.width;
-    final alto = MediaQuery.of(context).size.height;
-    /*
-    return Container(
-      child: ListView.builder(
-        itemCount: modulo.temas.length,
-        itemBuilder: (context, i) {
-          final Audicion tema = modulo.temas[i];
-          return ListTile(
-            leading: Image(
-              image: AssetImage(tema.pathImg),
-            ),
-            title: Text(tema.titulo),
-            subtitle: Text(tema.subtitulo),
-          );
-        },
-      ),
-    );
-    */
-    
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: ancho*0.03),
-      child: Column(
-        children: <Widget>[
-          Text(tema.titulo),
-          Text(tema.descripcion),
-          Divider(),
-        ],
-      ),
-    );
-    
-  }
-}
 
 /// An indicator showing the currently selected page of a PageController
 class DotsIndicator extends AnimatedWidget {
@@ -375,6 +320,8 @@ class DotsIndicator extends AnimatedWidget {
 
 
   Widget _buildDot(int index) {
+    print(controller.toString());
+    // return Container();
     double selectedness = Curves.easeOut.transform(
       max(
         0.0,
@@ -408,3 +355,7 @@ class DotsIndicator extends AnimatedWidget {
     );
   }
 }
+
+
+// bool isSelected = controller.hasClients ? controller.page == index : controller.initialPage == index;
+// Color color = isSelected ? Colors.orange[200] : Colors.orange[100];

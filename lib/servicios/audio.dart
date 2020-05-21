@@ -176,6 +176,7 @@ class ControlAudio extends StatelessWidget {
     var prov = Provider.of<AudioService>(context);
     final ancho = MediaQuery.of(context).size.width;
     final alto = MediaQuery.of(context).size.height;
+    double opaco = 1;
     final stText = TextStyle(
       color: Colors.white,
       fontSize: ancho * 0.03,
@@ -186,59 +187,66 @@ class ControlAudio extends StatelessWidget {
         ),
       ]
     );
-    if (prov == null)
-      return Container();
-    if (!prov.enAudio)
-       return Container();
-    return Container(
-      child: Column (
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            width: ancho*0.4,
-            child: Row(
+    if (prov == null) {
+      // return Container();
+      opaco = 0.0;
+    } else if (!prov.enAudio) {
+        opaco = 0.0;
+      //  return Container();
+    }
+    return AnimatedOpacity(
+      opacity: opaco,
+      duration: Duration(milliseconds: 800),
+      child: Container(
+        child: Column (
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              width: ancho*0.4,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('${prov.posicion}', style: stText,),
+                  Expanded(child: Container()),
+                  Text('${prov.duracion}', style: stText,),
+                ],
+              ),
+            ),
+            Text('${prov.titulo}', style: stText,),
+            Transform.scale(
+              scale: 0.4,
+              child: RoundedProgressBar(
+                style: RoundedProgressBarStyle(
+                  borderWidth: 0.0,
+                  widthShadow: 0.0,
+                  ),
+                percent: prov.avance*100,
+                borderRadius: BorderRadius.circular(24),
+              ),
+            ),
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text('${prov.posicion}', style: stText,),
-                Expanded(child: Container()),
-                Text('${prov.duracion}', style: stText,),
-              ],
-            ),
-          ),
-          Text('${prov.titulo}', style: stText,),
-          Transform.scale(
-            scale: 0.4,
-            child: RoundedProgressBar(
-              style: RoundedProgressBarStyle(
-                borderWidth: 0.0,
-                widthShadow: 0.0,
+                IconButton(
+                  onPressed: () => prov.pausa(), 
+                  icon: prov.enPausa ?
+                    IconShadowWidget(Icon(Icons.play_arrow, color: Colors.white,),
+                      shadowColor: Colors.black,
+                    ) :
+                    IconShadowWidget(Icon(Icons.pause, color: Colors.white,),
+                      shadowColor: Colors.black,
+                    ),
                 ),
-              percent: prov.avance*100,
-              borderRadius: BorderRadius.circular(24),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              IconButton(
-                onPressed: () => prov.pausa(), 
-                icon: prov.enPausa ?
-                  IconShadowWidget(Icon(Icons.play_arrow, color: Colors.white,),
-                    shadowColor: Colors.black,
-                  ) :
-                  IconShadowWidget(Icon(Icons.pause, color: Colors.white,),
+                IconButton(
+                  onPressed: () => prov.stop(), 
+                  icon: IconShadowWidget(Icon(Icons.stop, color: Colors.white),
                     shadowColor: Colors.black,
                   ),
-              ),
-              IconButton(
-                onPressed: () => prov.stop(), 
-                icon: IconShadowWidget(Icon(Icons.stop, color: Colors.white),
-                  shadowColor: Colors.black,
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

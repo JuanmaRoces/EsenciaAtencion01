@@ -4,6 +4,7 @@ import 'package:esencia_de_atencion_01/servicios/audio.dart';
 import 'package:esencia_de_atencion_01/servicios/contenido.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MenuPage extends StatelessWidget {
   @override
@@ -71,38 +72,41 @@ class PortadaCard extends StatelessWidget {
     final alto = MediaQuery.of(context).size.height;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: ancho*0.05, vertical: alto*0.01),
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(alto*0.03)),
-        elevation: alto*0.005,
-        child: Column(
-          children: <Widget>[
-            SizedBox(width: double.infinity, height: alto*0.01,),
-            Image(image: AssetImage('assets/logo-esencia.jpg'),
-              height: alto*0.05,
-              width: ancho*0.9,
-              // fit: BoxFit.cover,
-            ),
-            SizedBox(width: double.infinity, height: alto*0.01,),
-            Text('Módulos y prácticas de Mindfulness',
-              style: TextStyle(fontSize: ancho*0.03, fontWeight: FontWeight.bold),
-            ),
-            Text('Practica la satisfacción en tu vida',
-              style: TextStyle(fontSize: ancho*0.03),
-            ),
-            Text('https://esenciadeatencion.com',
-              style: TextStyle(fontSize: ancho*0.03, fontWeight: FontWeight.bold),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8), 
-              child: Text('Cambia la inquietud y el sufrimiento por la satisfacción '
-                'con mis propuestas de Mindfulness, atención consciente y '
-                'desarrollo personal.\n'
-                'Aquí encontrarás 22 audios que te ayudarán en ese proyecto.',
+      child: GestureDetector(
+        onTap: () => abreNavegador('http://esenciadeatencion.com'),
+        child: Card(
+          clipBehavior: Clip.antiAlias,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(alto*0.03)),
+          elevation: alto*0.005,
+          child: Column(
+            children: <Widget>[
+              SizedBox(width: double.infinity, height: alto*0.01,),
+              Image(image: AssetImage('assets/logo-esencia.jpg'),
+                height: alto*0.05,
+                width: ancho*0.9,
+                // fit: BoxFit.cover,
+              ),
+              SizedBox(width: double.infinity, height: alto*0.01,),
+              Text('Módulos y prácticas de Mindfulness',
+                style: TextStyle(fontSize: ancho*0.03, fontWeight: FontWeight.bold),
+              ),
+              Text('Practica la satisfacción en tu vida',
                 style: TextStyle(fontSize: ancho*0.03),
               ),
-            )
-          ],
+              Text('https://esenciadeatencion.com',
+                style: TextStyle(fontSize: ancho*0.03, fontWeight: FontWeight.bold),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8), 
+                child: Text('Cambia la inquietud y el sufrimiento por la satisfacción '
+                  'con mis propuestas de Mindfulness, atención consciente y '
+                  'desarrollo personal.\n'
+                  'Aquí encontrarás 22 audios que te ayudarán en ese proyecto.',
+                  style: TextStyle(fontSize: ancho*0.03),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -167,25 +171,38 @@ class CreditosCard extends StatelessWidget {
     final alto = MediaQuery.of(context).size.height;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: ancho*0.05, vertical: alto*0.01),
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(alto*0.03)),
-        elevation: alto*0.005,
-        child: Column(
-          children: <Widget>[
-            SizedBox(width: double.infinity, height: alto*0.01,),
-            Image(image: AssetImage('assets/roces-it.png'),
-              height: alto*0.05,
-              width: ancho*0.9,
-              // fit: BoxFit.cover,
-            ),
-            SizedBox(width: double.infinity, height: alto*0.01,),
-            Text('https://www.rocesit.com',
-              style: TextStyle(fontSize: ancho*0.03, fontWeight: FontWeight.bold),
-            ),
-          ],
+      child: GestureDetector(
+        onTap: () => abreNavegador('http://www.rocesit.com'),
+        child: Card(
+          clipBehavior: Clip.antiAlias,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(alto*0.03)),
+          elevation: alto*0.005,
+          child: Column(
+            children: <Widget>[
+              SizedBox(width: double.infinity, height: alto*0.01,),
+              Image(image: AssetImage('assets/roces-it.png'),
+                height: alto*0.05,
+                width: ancho*0.9,
+                // fit: BoxFit.cover,
+              ),
+              SizedBox(width: double.infinity, height: alto*0.01,),
+              Text('http://www.rocesit.com',
+                style: TextStyle(fontSize: ancho*0.03, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(width: double.infinity, height: alto*0.01,),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+}
+void abreNavegador (String url) async {
+  // const url = 'http://www.rocesit.com';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'No se puede abrir la url: $url';
   }
 }

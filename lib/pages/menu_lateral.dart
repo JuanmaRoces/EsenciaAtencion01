@@ -30,32 +30,6 @@ class MenuLateral extends StatelessWidget {
           }
         }
       ),
-      /*
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          DrawerHeader(
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  blurRadius: 5.0,
-                  offset: Offset.fromDirection(3),
-                )
-              ]
-            ),
-            child: Container(),
-          ),
-          ListTile(
-            leading: Icon(Icons.people_outline, color: Theme.of(context).primaryColor),
-            title: Text('Segunda opción'),
-          ),
-          ListTile(
-            leading: Icon(Icons.computer, color: Theme.of(context).primaryColor),
-            title: Text('Tercera opción'),
-          ),
-        ],
-      )
-      */
     );
   }
 }
@@ -102,13 +76,6 @@ class _AudicionItemState extends State<AudicionItem> {
             });
           }
         )
-        /*
-        IconButton(
-          onPressed: () => pref.cambiaEstado(aud.id),
-          icon: Icon(
-            visto ? Icons.check_box : Icons.check_box_outline_blank
-          )
-        */
     );
   }
 }
