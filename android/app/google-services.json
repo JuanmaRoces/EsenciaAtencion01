@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "679561394570",
+    "firebase_url": "https://esencia0.firebaseio.com",
+    "project_id": "esencia0",
+    "storage_bucket": "esencia0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:679561394570:android:534a81ee00a390926fb073",
+        "android_client_info": {
+          "package_name": "com.rocesit.esencia0"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "679561394570-rgo6fllo4eo5qpthfu4vk8i7016a8ggq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rocesit.esencia0",
+            "certificate_hash": "55ee2cd6c7ed0d8be731a579758e62c85388c802"
+          }
+        },
+        {
+          "client_id": "679561394570-l57ri0gbjl1dklcepn4jdg0ukndt54ed.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZ2PrG2kAId2nMlcyEGUuucSr_g8Id5Rk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "679561394570-l57ri0gbjl1dklcepn4jdg0ukndt54ed.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

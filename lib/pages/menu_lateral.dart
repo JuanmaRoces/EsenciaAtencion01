@@ -8,27 +8,41 @@ class MenuLateral extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      child: ListView.builder(
-        padding: EdgeInsets.zero,
-        itemCount: modulos.length+1,
-        itemBuilder: (BuildContext context, int i) {
-          if (i == 0) {
-            return  DrawerHeader(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    blurRadius: 5.0,
-                    offset: Offset.fromDirection(3),
-                  )
-                ]
-              ),
-              child: Container(),
-            );
-          } else {
-            return ModuloItem(modulos[i-1]);
+    final ancho = MediaQuery.of(context).size.width;
+    final alto = MediaQuery.of(context).size.height;
+    return Container(
+      width: ancho*0.6,
+      child: Drawer(
+        child: ListView.builder(
+          padding: EdgeInsets.zero,
+          itemCount: modulos.length+2,
+          itemBuilder: (BuildContext context, int i) {
+            if (i == 0) {
+              return  Container(
+                height: alto*0.30,
+                child: DrawerHeader(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/geni-portada-2.jpg'),
+                      fit: BoxFit.cover,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 5.0,
+                        offset: Offset.fromDirection(3),
+                      )
+                    ]
+                  ),
+                  child: Container(),
+                ),
+              );
+            } else if (i <= modulos.length) {
+              return ModuloItem(modulos[i-1]);
+            } else {
+              return MenuCatalogo();
+            }
           }
-        }
+        ),
       ),
     );
   }
@@ -39,9 +53,27 @@ class ModuloItem extends StatelessWidget {
   ModuloItem(this.mod);
   @override
   Widget build(BuildContext context) {
+    final ancho = MediaQuery.of(context).size.width;
     return ExpansionTile(
-      title: Text('${this.mod.titulo}'),
+      title: Text('${this.mod.titulo}',
+        style: TextStyle(fontSize: ancho*0.03),
+      ),
       children: mod.temas.map(( tema ) => AudicionItem(tema)).toList(),
+    );
+  }
+}
+
+class MenuCatalogo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final ancho = MediaQuery.of(context).size.width;
+    return ListTile(
+      title: Text('Catálogo de aplicaciones',
+        style: TextStyle(fontSize: ancho*0.03),
+      ),
+      onTap: () {
+        Navigator.pushNamed(context, 'catalogo');
+      },
     );
   }
 }

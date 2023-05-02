@@ -1,9 +1,8 @@
-import 'dart:async';
-
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:esencia_de_atencion_01/servicios/prefs_usuario.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_rounded_progress_bar/flutter_rounded_progress_bar.dart';
 import 'package:icon_shadow/icon_shadow.dart';
@@ -17,14 +16,15 @@ class AudioService with ChangeNotifier {
   double _avance;
   // ControlAudio _ctrlAudio;
   Widget _ctrlAudio;
-  Animacion _controles;
+  // Animacion _controles;
   String titulo;
   int nroTema;
 
   ////////// Servicio de Audio
   AudioService() {
+    print('auido service');
     _ctrlAudio = new ControlAudio();
-    _controles = new Animacion(_ctrlAudio);
+    // _controles = new Animacion(_ctrlAudio);
     _player.current.listen((onData) {
       _duracion = onData.audio.duration;
       notifyListeners();
@@ -51,6 +51,8 @@ class AudioService with ChangeNotifier {
   }
   @override
   dispose() {
+    showToast('dispose');
+    _player.stop();
     _player.dispose();
     super.dispose();
   }
@@ -118,56 +120,56 @@ class AudioService with ChangeNotifier {
   }
 }
 //// Animación
-class Animacion extends StatefulWidget {
-  ControlAudio controlAudio;
-  AnimationController ctrl;
-  Animation<double> pos;
-  Animacion(this.controlAudio);
-  void avanzar() {
-    this.ctrl.forward();
-  }
-  void retroceder() {
-    ctrl.reverse();
-    //ctrl.reset();
-  }
-  @override
-  _AnimacionState createState() => _AnimacionState();
-}
-class _AnimacionState extends State<Animacion> with SingleTickerProviderStateMixin{
-  @override
-  void initState() { 
-    super.initState();
-    widget.ctrl = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 3000),
-    );
-    widget.ctrl.addListener(() {
-      print(widget.ctrl.status);
-    });
-    widget.pos = Tween(begin: 0.0, end: 200.0).animate(
-      CurvedAnimation(parent: widget.ctrl, 
-      curve: Curves.easeOutQuart)
-    );
-  }
-  @override
-  void dispose() { 
-    widget.ctrl.dispose();
-    super.dispose();
-  }
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: widget.ctrl,
-      child: widget.controlAudio,
-      builder: (BuildContext context, Widget child) {
-        return Transform.translate(
-          offset: Offset(0, widget.pos.value),
-          child: child,
-        );
-      },
-    );
-  }
-}
+// class Animacion extends StatefulWidget {
+//   ControlAudio controlAudio;
+//   AnimationController ctrl;
+//   Animation<double> pos;
+//   Animacion(this.controlAudio);
+//   void avanzar() {
+//     this.ctrl.forward();
+//   }
+//   void retroceder() {
+//     ctrl.reverse();
+//     //ctrl.reset();
+//   }
+//   @override
+//   _AnimacionState createState() => _AnimacionState();
+// }
+// class _AnimacionState extends State<Animacion> with SingleTickerProviderStateMixin{
+//   @override
+//   void initState() { 
+//     super.initState();
+//     widget.ctrl = AnimationController(
+//       vsync: this,
+//       duration: Duration(milliseconds: 3000),
+//     );
+//     widget.ctrl.addListener(() {
+//       print(widget.ctrl.status);
+//     });
+//     widget.pos = Tween(begin: 0.0, end: 200.0).animate(
+//       CurvedAnimation(parent: widget.ctrl, 
+//       curve: Curves.easeOutQuart)
+//     );
+//   }
+//   @override
+//   void dispose() { 
+//     widget.ctrl.dispose();
+//     super.dispose();
+//   }
+//   @override
+//   Widget build(BuildContext context) {
+//     return AnimatedBuilder(
+//       animation: widget.ctrl,
+//       child: widget.controlAudio,
+//       builder: (BuildContext context, Widget child) {
+//         return Transform.translate(
+//           offset: Offset(0, widget.pos.value),
+//           child: child,
+//         );
+//       },
+//     );
+//   }
+// }
 
 ////////// Control de Audio
 class ControlAudio extends StatelessWidget {
@@ -179,7 +181,7 @@ class ControlAudio extends StatelessWidget {
     double opaco = 1;
     final stText = TextStyle(
       color: Colors.white,
-      fontSize: ancho * 0.03,
+      fontSize: ancho * 0.02,
       shadows: [
         Shadow(
           color: Colors.black,
@@ -214,13 +216,13 @@ class ControlAudio extends StatelessWidget {
             ),
             Text('${prov.titulo}', style: stText,),
             Transform.scale(
-              scale: 0.4,
+              scale: 0.2,
               child: RoundedProgressBar(
                 style: RoundedProgressBarStyle(
                   borderWidth: 0.0,
                   widthShadow: 0.0,
                   ),
-                percent: prov.avance*100,
+                percent: (prov.avance??0.0)*100,
                 borderRadius: BorderRadius.circular(24),
               ),
             ),
